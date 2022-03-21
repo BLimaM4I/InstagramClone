@@ -1,7 +1,8 @@
-package com.lda.m4i.instagramclone;
+package com.lda.m4i.instagramclone.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.lda.m4i.instagramclone.R;
 
 public class MainActivity extends AppCompatActivity {
 
