@@ -1,7 +1,9 @@
 package com.lda.m4i.instagramclone.activity;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,8 @@ import com.lda.m4i.instagramclone.model.User;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etUserName, etEmail, etPassword;
+    private Button btnRegister;
+    private ProgressBar pbRegister;
     private FirebaseAuth fbAuth;
 
     @Override
@@ -25,9 +29,26 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        //Initialize components
+        initializeComponents();
+
+        //Click on register button
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pbRegister.setVisibility(View.VISIBLE);
+                validateRegisterUser(view);
+            }
+        });
+
+    }
+
+    private void initializeComponents() {
         etUserName = findViewById(R.id.activity_register_et_userName);
         etEmail = findViewById(R.id.activity_register_et_email);
         etPassword = findViewById(R.id.activity_register_et_password);
+        btnRegister = findViewById(R.id.activity_register_btn_register);
+        pbRegister = findViewById(R.id.activity_register_progressBar);
     }
 
     public void saveUserInFirebase(final User user) {
@@ -39,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    pbRegister.setVisibility(View.GONE);
                     Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
                     FirebaseUserAccess.updateUserName(user.getName());
                     try {
