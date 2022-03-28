@@ -1,5 +1,6 @@
 package com.lda.m4i.instagramclone.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,12 +36,10 @@ public class RegisterActivity extends AppCompatActivity {
         //Click on register button
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                pbRegister.setVisibility(View.VISIBLE);
-                validateRegisterUser(view);
+            public void onClick(View v) {
+                validateRegisterUser(v);
             }
         });
-
     }
 
     private void initializeComponents() {
@@ -53,43 +52,53 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void saveUserInFirebase(final User user) {
 
+        pbRegister.setVisibility(View.VISIBLE);
         fbAuth = FirebaseConfiguration.getFirebaseAuth();
         fbAuth.createUserWithEmailAndPassword(
-                user.getEmail(), user.getPassword()
-        ).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    pbRegister.setVisibility(View.GONE);
-                    Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                    FirebaseUserAccess.updateUserName(user.getName());
-                    try {
-                        String userIdIdentification = Base64Custom.encodeBase64(user.getEmail());
-                        user.setUserId(userIdIdentification);
-                        user.save();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        finish();
+                user.getEmail(),
+                user.getPassword()
+        ).addOnCompleteListener(
+                this,
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            pbRegister.setVisibility(View.GONE);
+
+                            Toast.makeText(RegisterActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
+
+                            FirebaseUserAccess.updateUserName(user.getName());
+                            try {
+                                String userIdIdentification = Base64Custom.encodeBase64(user.getEmail());
+                                user.setUserId(userIdIdentification);
+                                user.save();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                //go to Main Activity
+                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                                finish();
+                            }
+                        } else {
+                            pbRegister.setVisibility(View.GONE);
+                            String exception = "";
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthWeakPasswordException e) {
+                                exception = "Please introduce a stronger password";
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                exception = "Please insert a valid e-mail";
+                            } catch (FirebaseAuthUserCollisionException e) {
+                                exception = "This account is already registered";
+                            } catch (Exception e) {
+                                exception = "Error in registering: " + e.getMessage();
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(RegisterActivity.this, exception, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    String exception = "";
-                    try {
-                        throw task.getException();
-                    } catch (FirebaseAuthWeakPasswordException e) {
-                        exception = "Please introduce a stronger password";
-                    } catch (FirebaseAuthInvalidCredentialsException e) {
-                        exception = "Please insert a valid e-mail";
-                    } catch (FirebaseAuthUserCollisionException e) {
-                        exception = "This account is already registered";
-                    } catch (Exception e) {
-                        exception = "Error on trying to register: " + e.getMessage();
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(RegisterActivity.this, exception, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
     }
 
     public void validateRegisterUser(View v) {
@@ -121,5 +130,4 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Please fill the name field", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

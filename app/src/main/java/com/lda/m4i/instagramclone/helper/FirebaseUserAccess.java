@@ -22,8 +22,7 @@ public class FirebaseUserAccess {
     public static String getUserId() {
         FirebaseAuth user = FirebaseConfiguration.getFirebaseAuth();
         String email = user.getCurrentUser().getEmail();
-        String userID = Base64Custom.encodeBase64(email);
-        return userID;
+        return Base64Custom.encodeBase64(email);
     }
 
     public static FirebaseUser getActualUser() {
