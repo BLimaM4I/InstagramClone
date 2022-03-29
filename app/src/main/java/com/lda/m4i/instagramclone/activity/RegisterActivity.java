@@ -45,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void initializeComponents() {
         etUserName = findViewById(R.id.activity_register_et_userName);
         etEmail = findViewById(R.id.activity_register_et_email);
+        etEmail.requestFocus();
         etPassword = findViewById(R.id.activity_register_et_password);
         btnRegister = findViewById(R.id.activity_register_btn_register);
         pbRegister = findViewById(R.id.activity_register_progressBar);

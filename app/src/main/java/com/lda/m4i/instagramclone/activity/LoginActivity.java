@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,16 +24,30 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private FirebaseAuth fbAuth;
+    private ProgressBar pbLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        etEmail = findViewById(R.id.activity_login_et_email);
-        etPassword = findViewById(R.id.activity_login_et_password);
-
         fbAuth = FirebaseConfiguration.getFirebaseAuth();
+        checkUserIsLoggedIn();
+        initializeComponents();
+    }
+
+    private void initializeComponents() {
+        etEmail = findViewById(R.id.activity_login_et_email);
+        etEmail.requestFocus();
+        etPassword = findViewById(R.id.activity_login_et_password);
+        pbLogin = findViewById(R.id.activity_login_progressbar);
+
+
+    }
+
+    public void checkUserIsLoggedIn() {
+        if (fbAuth.getCurrentUser() != null) {
+            openMainActivity();
+        }
     }
 
     public void loginUser(User user) {
@@ -42,9 +57,12 @@ public class LoginActivity extends AppCompatActivity {
         ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     openMainActivity();
                 } else {
+                    //Hide progress bar
+                    pbLogin.setVisibility(View.GONE);
+                    //Handle exception
                     String exception = "";
                     try {
                         throw task.getException();
@@ -65,13 +83,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void validateUserLogin(View v) {
-
         String textEmail = etEmail.getText().toString();
         String textPassword = etPassword.getText().toString();
 
         if (!textEmail.isEmpty()) {
             if (!textPassword.isEmpty()) {
-
+                //Show progressbar to the user
+                pbLogin.setVisibility(View.VISIBLE);
                 //Create user
                 User user = new User();
                 user.setEmail(textEmail);
@@ -88,12 +106,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void openRegisterActivity(View v) {
-        Intent i = new Intent(LoginActivity.this,RegisterActivity.class);
+        Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(i);
     }
 
     public void openMainActivity() {
-        Intent i = new Intent(LoginActivity.this,MainActivity.class);
+        //Hide progress bar
+        pbLogin.setVisibility(View.GONE);
+
+        Intent i = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(i);
     }
 }
