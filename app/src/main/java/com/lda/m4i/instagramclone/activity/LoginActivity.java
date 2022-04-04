@@ -1,15 +1,13 @@
 package com.lda.m4i.instagramclone.activity;
 
 import android.content.Intent;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         fbAuth = FirebaseConfiguration.getFirebaseAuth();
+        pbLogin = findViewById(R.id.activity_login_progressbar);
         checkUserIsLoggedIn();
         initializeComponents();
     }
@@ -39,9 +38,6 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.activity_login_et_email);
         etEmail.requestFocus();
         etPassword = findViewById(R.id.activity_login_et_password);
-        pbLogin = findViewById(R.id.activity_login_progressbar);
-
-
     }
 
     public void checkUserIsLoggedIn() {
