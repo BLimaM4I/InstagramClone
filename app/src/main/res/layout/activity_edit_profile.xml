@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.EditProfileActivity" android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="center" android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/avatar"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:id="@+id/fragment_edit_profile_iv_profilePhoto"
+        />
+        <TextView
+                android:text="Change photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView4" android:textAlignment="center"
+                android:textColor="@color/darkBlue" android:textStyle="bold" android:textSize="16sp"/>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="User name" android:drawableLeft="@drawable/ic_baseline_emoji_people_24"
+                    android:drawableTint="@android:color/darker_gray"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_baseline_email_24"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:hint="email"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <Button
+                android:text="Save changes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/button"/>
+    </LinearLayout>
+
+</LinearLayout>
